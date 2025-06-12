@@ -3,17 +3,36 @@ document.getElementById("btn-reveal").addEventListener("click", () => {
 });
 
 function startLiveCounter() {
-  const startDate = new Date("2015-07-17T00:00:00");
+  const startDate = new Date("2015-07-27T00:00:00");
 
   function update() {
     const now = new Date();
-    const diff = now - startDate;
+    const yearDiff = now - startDate;
+
+    const yearTotalSeconds = Math.floor(yearDiff / 1000);
+
+    const years = Math.floor(yearTotalSeconds / (365 * 24 * 60 * 60))
+
+    const latestSafeDate = new Date("2015-07-27T00:00:00");
+
+    if(years > 1) {
+        const fullYear = startDate.getFullYear();
+        const newYear = fullYear + years;
+        console.log("newYear:", newYear);
+        latestSafeDate.setFullYear(newYear);
+    }
+    console.log(latestSafeDate);
+
+    const diff = now - latestSafeDate;
 
     const totalSeconds = Math.floor(diff / 1000);
 
-    const years = Math.floor(totalSeconds / (365 * 24 * 60 * 60));
-    const months = Math.floor(totalSeconds / (30 * 24 * 60 * 60)) % 12;
-    const days = Math.floor(totalSeconds / (24 * 60 * 60)) % 30;
+    const daysCalc = Math.floor(totalSeconds / ((24 * 60 * 60))) % 30.5;
+    const days = daysCalc > 30.0 ? 0 : Math.trunc(daysCalc);
+
+    const monthsCalc = (Math.floor(totalSeconds / (30.5 * 24 * 60 * 60))) % 12;
+    const months = monthsCalc > 11.0 ? 0 : Math.trunc(monthsCalc);
+
     const hours = Math.floor((totalSeconds / (60 * 60)) % 24);
     const minutes = Math.floor((totalSeconds / 60) % 60);
     const seconds = totalSeconds % 60;
